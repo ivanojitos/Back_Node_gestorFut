@@ -81,7 +81,7 @@ exports.crearJugador = async (req, res) => {
 
         return res.json({
             ok: true,
-            message: 'Usuario creado correctamente',
+            message: 'Usuario creado correctamente,aprobado mi niño',
             data: jugador
         });
 
