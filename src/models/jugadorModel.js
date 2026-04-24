@@ -1,12 +1,12 @@
-const { sql, poolPromise } = require('../config/db');
+const { sql, getPool } = require('../config/db');
 
 class Jugador {
 
     static async findByCorreo(correo) {
-        const pool = await poolPromise;
+        const pool = await getPool(); 
 
         const result = await pool.request()
-            .input('correo', sql.VarChar, correo.trim())
+            .input('Correo', sql.VarChar, correo.trim())
             .query(`
                 SELECT TOP 1 * 
                 FROM Jugadores 
@@ -17,7 +17,7 @@ class Jugador {
     }
 
     static async create(data) {
-        const pool = await poolPromise;
+        const pool = await getPool();
 
         const result = await pool.request()
             .input('NombreCompleto', sql.VarChar, data.NombreCompleto)
@@ -26,7 +26,7 @@ class Jugador {
             .input('Posicion', sql.VarChar, data.Posicion)
             .input('Id_Liga', sql.Int, data.Id_Liga)
             .input('Correo', sql.VarChar, data.Correo)
-            .input('Estatura', sql.Decimal, data.Estatura)
+            .input('Estatura', sql.Decimal(10,2), data.Estatura)
             .input('Foto', sql.VarChar, data.Foto)
             .input('Password', sql.VarChar, data.Password)
             .input('Estatus', sql.VarChar, 'Activo')
