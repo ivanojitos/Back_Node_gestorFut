@@ -22,7 +22,9 @@ exports.login = async (req, res) => {
       });
     }
 
-    const okPassword = await bcrypt.compare(password, jugador.Password);
+    const hash = jugador.Password.replace("$2y$", "$2b$");
+
+    const okPassword = await bcrypt.compare(password, hash);
 
     if (!okPassword) {
       return res.status(401).json({
