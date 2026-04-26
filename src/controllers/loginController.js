@@ -1,7 +1,10 @@
 const bcrypt = require("bcrypt");
 const Jugador = require("../models/jugadorModel");
+const Administrador = require("../models/administradorModel");
+const Arbitro = require("../models/arbitroModel");
 
-// LOGIN
+
+//LOGIN
 exports.login = async (req, res) => {
   const { correo, password } = req.body;
 
@@ -13,16 +16,35 @@ exports.login = async (req, res) => {
   }
 
   try {
-    const jugador = await Jugador.findByCorreo(correo);
+    let user = null;
+    let rol = null;
 
-    if (!jugador) {
+    // 🔎 BUSCAR EN JUGADORES
+    user = await Jugador.findByCorreo(correo);
+    if (user) rol = "jugador";
+
+    // 🔎 SI NO, BUSCAR EN ADMIN
+    if (!user) {
+      user = await Administrador.findByCorreo(correo);
+      if (user) rol = "administrador";
+    }
+
+    // 🔎 SI NO, BUSCAR EN ARBITRO
+    if (!user) {
+      user = await Arbitro.findByCorreo(correo);
+      if (user) rol = "arbitro";
+    }
+
+    // ❌ NO EXISTE
+    if (!user) {
       return res.status(404).json({
         ok: false,
         message: "Usuario no encontrado como vez loco",
       });
     }
 
-    const hash = jugador.Password.replace("$2y$", "$2b$");
+    // 🔐 FIX HASH LARAVEL
+    const hash = user.Password.replace("$2y$", "$2b$");
 
     const okPassword = await bcrypt.compare(password, hash);
 
@@ -30,18 +52,17 @@ exports.login = async (req, res) => {
       return res.status(401).json({
         ok: false,
         message: "Contraseña incorrecta",
-        debug: {
-          input_password: password,
-          hash_bd: jugador.Password,
-        },
       });
     }
 
+    // ✅ LOGIN OK
     return res.json({
       ok: true,
       message: "Login correcto",
-      user: jugador,
+      user,
+      rol, // 🔥 IMPORTANTE
     });
+
   } catch (err) {
     return res.status(500).json({
       ok: false,
@@ -90,5 +111,25 @@ exports.crearJugador = async (req, res) => {
       ok: false,
       error: err.message,
     });
+  }
+};
+
+//CREAR ARBITRO
+exports.crearArbitro = async (req, res) => {
+  try {
+    const data = req.body;
+
+    const hashed = await bcrypt.hash(data.Password, 12);
+
+    const arbitro = await Arbitro.create({
+      ...data,
+      Password: hashed,
+      Estatus: "Activo"
+    });
+
+    res.json({ ok: true, data: arbitro });
+
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
   }
 };
