@@ -3,7 +3,6 @@ const Jugador = require("../models/jugadorModel");
 const Administrador = require("../models/administradorModel");
 const Arbitro = require("../models/arbitroModel");
 
-
 //LOGIN
 exports.login = async (req, res) => {
   const { correo, password } = req.body;
@@ -62,7 +61,6 @@ exports.login = async (req, res) => {
       user,
       rol, // 🔥 IMPORTANTE
     });
-
   } catch (err) {
     return res.status(500).json({
       ok: false,
@@ -124,12 +122,21 @@ exports.crearArbitro = async (req, res) => {
     const arbitro = await Arbitro.create({
       ...data,
       Password: hashed,
-      Estatus: "Activo"
+      Estatus: "Activo",
     });
 
-    res.json({ ok: true, data: arbitro });
-
+    return res.json({
+      ok: true,
+      message: "Usuario creado correctamente,aprobado mi niño",
+      datos: arbitro,
+    });
   } catch (err) {
-    res.status(500).json({ ok: false, error: err.message });
+
+    return res.status(500).json({
+      ok: false,
+      message: "Error al crear el arbitro, revisa bien tus datos.",
+      error: err.message,
+      value: req.body,
+    });
   }
 };
