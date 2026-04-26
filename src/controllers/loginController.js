@@ -117,24 +117,30 @@ exports.crearArbitro = async (req, res) => {
   try {
     const data = req.body;
 
-    const hashed = await bcrypt.hash(data.Password, 10);
+    if (!data.password) {
+      return res.status(400).json({
+        ok: false,
+        message: "Password requerido",
+      });
+    }
+
+    const hashed = await bcrypt.hash(data.password, 10);
 
     const arbitro = await Arbitro.create({
       ...data,
-      Password: hashed,
-      Estatus: "Activo",
+      password: hashed, // 👈 minúscula
+      estatus: "Activo",
     });
 
     return res.json({
       ok: true,
-      message: "Usuario creado correctamente,aprobado mi niño",
+      message: "Árbitro creado correctamente",
       datos: arbitro,
     });
   } catch (err) {
-
     return res.status(500).json({
       ok: false,
-      message: "Error al crear el arbitro, revisa bien tus datos.",
+      message: "Error al crear el arbitro",
       error: err.message,
       value: req.body,
     });

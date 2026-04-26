@@ -8,14 +8,14 @@ class Arbitro {
 
     const result = await pool
       .request()
-      .input("Nombre", sql.VarChar, data.Nombre)
-      .input("Edad", sql.Int, data.Edad)
-      .input("Estudios", sql.VarChar, data.Estudios)
-      .input("Direccion", sql.VarChar, data.Direccion)
-      .input("CP", sql.VarChar, data.CP)
-      .input("Celular", sql.VarChar, data.Celular)
-      .input("Correo", sql.VarChar, data.Correo)
-      .input("Password", sql.VarChar, data.Password)
+      .input("Nombre", sql.VarChar, data.nombre)
+      .input("Edad", sql.Int, data.edad)
+      .input("Estudios", sql.VarChar, data.estudios)
+      .input("Direccion", sql.VarChar, data.direccion)
+      .input("CP", sql.VarChar, data.cp)
+      .input("Celular", sql.VarChar, data.celular)
+      .input("Correo", sql.VarChar, data.correo)
+      .input("Password", sql.VarChar, data.password) // 👈 aquí ya viene el hash
       .input("Estatus", sql.VarChar, "Activo")
       .input("created_at", sql.DateTime, now)
       .input("updated_at", sql.DateTime, now).query(`
