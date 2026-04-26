@@ -135,7 +135,8 @@ exports.crearArbitro = async (req, res) => {
     return res.json({
       ok: true,
       message: "Árbitro creado correctamente",
-      datos: arbitro,
+      user: arbitro,
+      rol: "arbitro",
     });
   } catch (err) {
     return res.status(500).json({
