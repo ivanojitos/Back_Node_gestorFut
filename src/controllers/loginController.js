@@ -23,10 +23,10 @@ exports.login = async (req, res) => {
     if (user) rol = "jugador";
 
     // 🔎 SI NO, BUSCAR EN ADMIN
-    if (!user) {
-      user = await Administrador.findByCorreo(correo);
-      if (user) rol = "administrador";
-    }
+    // if (!user) {
+    //   user = await Administrador.findByCorreo(correo);
+    //   if (user) rol = "administrador";
+    // }
 
     // 🔎 SI NO, BUSCAR EN ARBITRO
     if (!user) {
