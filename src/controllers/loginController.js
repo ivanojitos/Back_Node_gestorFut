@@ -119,7 +119,7 @@ exports.crearArbitro = async (req, res) => {
   try {
     const data = req.body;
 
-    const hashed = await bcrypt.hash(data.Password, 12);
+    const hashed = await bcrypt.hash(data.Password, 10);
 
     const arbitro = await Arbitro.create({
       ...data,
