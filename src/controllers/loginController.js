@@ -147,3 +147,12 @@ exports.crearArbitro = async (req, res) => {
     });
   }
 };
+
+router.get("/arbitro/:id", async (req, res) => {
+  try {
+    const arbitro = await Arbitro.findById(req.params.id);
+    res.json(arbitro);
+  } catch (err) {
+    res.status(500).json({ error: "Error al obtener árbitro" });
+  }
+});
