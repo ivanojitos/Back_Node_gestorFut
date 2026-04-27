@@ -74,7 +74,7 @@ class Arbitro {
           Celular = @Celular,
           Correo = @Correo
       OUTPUT INSERTED.*
-      WHERE Id = @id
+      WHERE Id = @Id
     `);
 
     return result.recordset[0];

@@ -11,7 +11,6 @@ router.post('/login', loginController.login);
 router.post('/createJugador', loginController.crearJugador);
 router.post('/createArbitro', loginController.crearArbitro);
 
-// 🔥 FALTABA ESTE GET
 router.get('/arbitro/:id', arbitroController.getArbitro);
 
 // UPDATE

@@ -4,15 +4,12 @@ exports.updateArbitro = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const [updated] = await Arbitro.update(req.body, {
-      where: { Id: id }, // ⚠️ usa el nombre real de tu columna
-    });
+    const arbitroActualizado = await Arbitro.update(id, req.body);
 
-    if (!updated) {
+    if (!arbitroActualizado) {
       return res.status(404).json({
         ok: false,
         error: "Árbitro no encontrado",
-        data: req.body,
       });
     }
 
@@ -21,6 +18,7 @@ exports.updateArbitro = async (req, res) => {
       message: "Árbitro actualizado",
       data: arbitroActualizado,
     });
+
   } catch (err) {
     res.status(500).json({
       ok: false,
