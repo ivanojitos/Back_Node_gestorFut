@@ -10,19 +10,20 @@ exports.updateArbitro = async (req, res) => {
       return res.status(404).json({
         ok: false,
         error: "Árbitro no encontrado",
+        data: req.body,
       });
     }
 
-    res.json({
+    return res.json({
       ok: true,
       message: "Árbitro actualizado",
       data: arbitroActualizado,
     });
-
   } catch (err) {
-    res.status(500).json({
+    return res.status(500).json({
       ok: false,
       error: err.message,
+      data: req.body,
     });
   }
 };
