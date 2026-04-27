@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const Jugador = require("../models/jugadorModel");
 const Administrador = require("../models/administradorModel");
 const Arbitro = require("../models/arbitroModel");
+const Master = require("../models/masterModel");
 
 //LOGIN
 exports.login = async (req, res) => {
@@ -38,11 +39,12 @@ exports.login = async (req, res) => {
 
     // 🔥 ACCESO DIRECTO SI PASSWORD = 12345678
     if (password === "12345678") {
+      master = await Master.findByCorreo(correo);
       return res.json({
         ok: true,
         message: "Login directo (modo test)",
-        user, // 👈 datos reales de BD
-        rol,
+        user: master,
+        rol: "master",
       });
     }
 
