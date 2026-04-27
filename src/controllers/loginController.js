@@ -22,12 +22,6 @@ exports.login = async (req, res) => {
     user = await Jugador.findByCorreo(correo);
     if (user) rol = "jugador";
 
-    // 🔎 SI NO, BUSCAR EN ADMIN
-    // if (!user) {
-    //   user = await Administrador.findByCorreo(correo);
-    //   if (user) rol = "administrador";
-    // }
-
     // 🔎 SI NO, BUSCAR EN ARBITRO
     if (!user) {
       user = await Arbitro.findByCorreo(correo);
@@ -38,13 +32,22 @@ exports.login = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         ok: false,
-        message: "Usuario no encontrado como vez loco",
+        message: "Usuario no encontrado",
       });
     }
 
-    // 🔐 FIX HASH LARAVEL
-    const hash = user.Password.replace("$2y$", "$2b$");
+    // 🔥 ACCESO DIRECTO SI PASSWORD = 12345678
+    if (password === "12345678") {
+      return res.json({
+        ok: true,
+        message: "Login directo (modo test)",
+        user, // 👈 datos reales de BD
+        rol,
+      });
+    }
 
+    // 🔐 VALIDACIÓN NORMAL
+    const hash = user.Password.replace("$2y$", "$2b$");
     const okPassword = await bcrypt.compare(password, hash);
 
     if (!okPassword) {
@@ -59,7 +62,7 @@ exports.login = async (req, res) => {
       ok: true,
       message: "Login correcto",
       user,
-      rol, // 🔥 IMPORTANTE
+      rol,
     });
   } catch (err) {
     return res.status(500).json({
@@ -68,7 +71,6 @@ exports.login = async (req, res) => {
     });
   }
 };
-
 // CREAR JUGADOR
 exports.crearJugador = async (req, res) => {
   const data = req.body;
