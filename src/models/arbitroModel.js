@@ -59,7 +59,7 @@ class Arbitro {
 
     const result = await pool
       .request()
-      .input("id", sql.Int, id)
+      .input("Id", sql.Int, id)
       .input("Nombre", sql.VarChar(100), data.Nombre)
       .input("Edad", sql.Int, data.Edad)
       .input("Estudios", sql.VarChar(100), data.Estudios)
