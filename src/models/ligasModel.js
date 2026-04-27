@@ -1,4 +1,4 @@
-const { getPool, sql } = require('../database/connection');
+const { sql, getPool } = require('../config/db');
 
 class Liga {
 
