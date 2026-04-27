@@ -1,17 +1,19 @@
-// arbitroController.js
-
 const Arbitro = require("../models/arbitroModel");
 
-exports.getArbitroById = async (req, res) => {
+exports.updateArbitro = async (req, res) => {
   try {
-    const arbitro = await Arbitro.findById(req.params.id);
+    const { id } = req.params;
 
-    if (!arbitro) {
-      return res.status(404).json({ message: "Árbitro no encontrado" });
-    }
+    const arbitroActualizado = await Arbitro.update(id, req.body);
 
-    res.json(arbitro);
+    res.json({
+      ok: true,
+      data: arbitroActualizado,
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({
+      ok: false,
+      error: err.message,
+    });
   }
 };

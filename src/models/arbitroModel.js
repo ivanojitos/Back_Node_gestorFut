@@ -53,6 +53,32 @@ class Arbitro {
 
     return result.recordset[0];
   }
+
+  static async update(id, data) {
+    const pool = await getPool();
+
+    const result = await pool
+      .request()
+      .input("id", sql.Int, id)
+      .input("Nombre", sql.VarChar(100), data.Nombre)
+      .input("Edad", sql.Int, data.Edad)
+      .input("Estudios", sql.VarChar(100), data.Estudios)
+      .input("Direccion", sql.VarChar(150), data.Direccion)
+      .input("Celular", sql.VarChar(10), data.Celular)
+      .input("Correo", sql.VarChar(100), data.Correo).query(`
+      UPDATE Arbitros
+      SET Nombre = @Nombre,
+          Edad = @Edad,
+          Estudios = @Estudios,
+          Direccion = @Direccion,
+          Celular = @Celular,
+          Correo = @Correo
+      OUTPUT INSERTED.*
+      WHERE Id = @id
+    `);
+
+    return result.recordset[0];
+  }
 }
 
 module.exports = Arbitro;
