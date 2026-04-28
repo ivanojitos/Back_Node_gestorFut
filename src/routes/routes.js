@@ -19,7 +19,6 @@ router.get('/arbitro/:id', arbitroController.getArbitro);
 router.put('/arbitro/:id', arbitroController.updateArbitro);
 
 // ✅ CREAR LIGA
-router.post('/ligas', ligasController.createLiga);
 
 // ✅ OBTENER TODAS
 router.get('/ligas', ligasController.getLigas);
