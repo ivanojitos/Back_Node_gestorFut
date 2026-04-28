@@ -1,14 +1,37 @@
 const Liga = require("../models/ligasModel");
 
 // 🔥 CREAR
+const fs = require("fs");
+const path = require("path");
+
 exports.createLiga = async (req, res) => {
   try {
     const data = req.body;
 
-    // 🔥 ruta del archivo guardado
+    // ✅ VALIDACIÓN
+    if (!data || !data.Nombre) {
+      return res.status(400).json({
+        ok: false,
+        error: "El nombre es obligatorio",
+      });
+    }
+
+    const nombre = data.Nombre.trim();
+    const folderName = nombre.replace(/\s+/g, "").toLowerCase();
+
+    // ✅ CREAR CARPETA DINÁMICA
+    const uploadPath = path.join(__dirname, "../../imagenes", folderName);
+
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+
+    // ✅ LOGO PATH
     const logoPath = req.file
-      ? `/imagenes/${Nombre.replace(/\s+/g, "").toLowerCase()}/${req.file.filename}`
+      ? `/imagenes/${folderName}/${req.file.filename}`
       : null;
+
+    data.Logo = logoPath;
 
     const nuevaLiga = await Liga.create(data);
 
@@ -18,7 +41,8 @@ exports.createLiga = async (req, res) => {
       data: nuevaLiga,
     });
   } catch (error) {
-    console.error(error);
+    console.error("ERROR CREATE LIGA:", error);
+
     res.status(500).json({
       ok: false,
       error: error.message,
