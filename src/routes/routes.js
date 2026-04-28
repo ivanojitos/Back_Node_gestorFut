@@ -21,7 +21,7 @@ router.put('/arbitro/:id', arbitroController.updateArbitro);
 // ✅ CREAR LIGA
 
 // ✅ OBTENER TODAS
-router.get('/ligasGet', ligasController.getLigas);
+router.get('/ligas', ligasController.getLigas);
 
 // ✅ OBTENER UNA
 router.get('/ligas/:id', ligasController.getLigaById);
