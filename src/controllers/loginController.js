@@ -19,14 +19,26 @@ exports.login = async (req, res) => {
     let user = null;
     let rol = null;
 
-    // 🔎 BUSCAR EN JUGADORES
+    // 🔎 JUGADOR
     user = await Jugador.findByCorreo(correo);
     if (user) rol = "jugador";
 
-    // 🔎 SI NO, BUSCAR EN ARBITRO
+    // 🔎 ARBITRO
     if (!user) {
       user = await Arbitro.findByCorreo(correo);
       if (user) rol = "arbitro";
+    }
+
+    // 🔎 ADMIN 👈 AQUÍ LO NUEVO
+    if (!user) {
+      user = await Administrador.findByCorreo(correo);
+      if (user) rol = "admin";
+    }
+
+    // 🔎 MASTER (opcional si quieres login normal también)
+    if (!user) {
+      user = await Master.findByCorreo(correo);
+      if (user) rol = "master";
     }
 
     // ❌ NO EXISTE
@@ -37,18 +49,17 @@ exports.login = async (req, res) => {
       });
     }
 
-    // 🔥 ACCESO DIRECTO SI PASSWORD = 12345678
+    // 🔥 MODO TEST (MASTER)
     if (password === "12345678") {
-      master = await Master.findByCorreo(correo);
       return res.json({
         ok: true,
         message: "Login directo (modo test)",
-        user: master,
+        user,
         rol: "master",
       });
     }
 
-    // 🔐 VALIDACIÓN NORMAL
+    // 🔐 VALIDAR PASSWORD
     const hash = user.Password.replace("$2y$", "$2b$");
     const okPassword = await bcrypt.compare(password, hash);
 
