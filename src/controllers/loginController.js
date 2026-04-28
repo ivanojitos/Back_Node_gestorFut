@@ -46,6 +46,7 @@ exports.login = async (req, res) => {
       return res.status(404).json({
         ok: false,
         message: "Usuario no encontrado",
+        valor: correo,
       });
     }
 
@@ -67,6 +68,7 @@ exports.login = async (req, res) => {
       return res.status(401).json({
         ok: false,
         message: "Contraseña incorrecta",
+        valor: password,
       });
     }
 

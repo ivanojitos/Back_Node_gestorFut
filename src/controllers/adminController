@@ -28,7 +28,7 @@ exports.createAdmin = async (req, res) => {
     console.log("BODY ADMIN:", data);
 
     // ✅ VALIDACIÓN
-    if (!data.Correo || !data.Password) {
+    if (!data.correo || !data.password) {
       return res.status(400).json({
         ok: false,
         error: "Correo y contraseña son obligatorios",
@@ -36,14 +36,16 @@ exports.createAdmin = async (req, res) => {
     }
 
     // 🔐 HASH PASSWORD
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(data.Password, saltRounds);
+    const hashedPassword = await bcrypt.hash(data.password, 10);
 
-    // reemplazar password original
-    data.Password = hashedPassword;
-
-    // 🚀 CREAR ADMIN
-    const nuevoAdmin = await Admin.create(data);
+    // 👇 mapear a tu DB
+    const nuevoAdmin = await Admin.create({
+      Correo: data.correo,
+      Password: hashedPassword,
+      Celular: data.celular || null,
+      Id_Ligas: data.id_liga || null,
+      Estatus: data.estatus || "Activo",
+    });
 
     res.status(201).json({
       ok: true,
