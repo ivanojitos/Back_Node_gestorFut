@@ -9,7 +9,7 @@ exports.createLiga = async (req, res) => {
     const data = req.body;
 
     // ✅ VALIDACIÓN
-    if (!data || !data.Nombre) {
+    if (!data || !data.Nombre || !data.Nombre.trim()) {
       return res.status(400).json({
         ok: false,
         error: "El nombre es obligatorio",
