@@ -1,0 +1,52 @@
+const Admin = require("../models/administradorModel");
+
+// 🔥 OBTENER TODOS
+exports.getAdmins = async (req, res) => {
+  try {
+    const admins = await Admin.getAll();
+
+    res.json({
+      ok: true,
+      data: admins,
+    });
+  } catch (error) {
+    console.error("ERROR GET ADMINS:", error);
+
+    res.status(500).json({
+      ok: false,
+      error: error.message,
+    });
+  }
+};
+
+// 🔥 CREAR ADMIN
+exports.createAdmin = async (req, res) => {
+  try {
+    const data = req.body;
+
+    console.log("BODY ADMIN:", data);
+
+    // ✅ VALIDACIÓN
+    if (!data.Correo || !data.Password) {
+      return res.status(400).json({
+        ok: false,
+        error: "Correo y contraseña son obligatorios",
+      });
+    }
+
+    const nuevoAdmin = await Admin.create(data);
+
+    res.status(201).json({
+      ok: true,
+      message: "Administrador creado correctamente",
+      data: nuevoAdmin,
+    });
+  } catch (error) {
+    console.error("ERROR CREATE ADMIN:", error);
+
+    res.status(500).json({
+      ok: false,
+      error: error.message,
+    });
+  }
+};
