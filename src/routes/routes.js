@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const upload = require("../middlewares/upload");
 
 const loginController = require('../controllers/loginController');
 const arbitroController = require('../controllers/arbitroController');
@@ -25,5 +26,7 @@ router.get('/ligas', ligasController.getLigas);
 
 // ✅ OBTENER UNA
 router.get('/ligas/:id', ligasController.getLigaById);
+
+router.post("/ligas", upload.single("Logo"), ligaController.createLiga);
 
 module.exports = router;

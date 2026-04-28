@@ -1,9 +1,14 @@
-const Liga = require('../models/ligasModel');
+const Liga = require("../models/ligasModel");
 
 // 🔥 CREAR
 exports.createLiga = async (req, res) => {
   try {
     const data = req.body;
+
+    // 🔥 ruta del archivo guardado
+    const logoPath = req.file
+      ? `/imagenes/${Nombre.replace(/\s+/g, "").toLowerCase()}/${req.file.filename}`
+      : null;
 
     const nuevaLiga = await Liga.create(data);
 
@@ -12,7 +17,6 @@ exports.createLiga = async (req, res) => {
       message: "Liga creada correctamente",
       data: nuevaLiga,
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({
@@ -31,7 +35,6 @@ exports.getLigas = async (req, res) => {
       ok: true,
       data: ligas,
     });
-
   } catch (error) {
     res.status(500).json({
       ok: false,
@@ -58,7 +61,6 @@ exports.getLigaById = async (req, res) => {
       ok: true,
       data: liga,
     });
-
   } catch (error) {
     res.status(500).json({
       ok: false,

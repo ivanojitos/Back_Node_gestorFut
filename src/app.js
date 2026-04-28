@@ -12,4 +12,6 @@ app.use(express.urlencoded({ extended: true }));
 // rutas
 app.use('/api', require('./routes/routes'));
 
+app.use("/imagenes", express.static("imagenes"));
+
 module.exports = app;
