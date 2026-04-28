@@ -10,7 +10,6 @@ class Liga {
     const result = await pool.request()
       .input("Nombre", sql.VarChar(50), data.Nombre)
       .input("Logo", sql.VarChar(255), data.Logo || null)
-      .input("Categorias", sql.VarChar(255), data.Categorias || null)
       .input("Direccion", sql.VarChar(150), data.Direccion || null)
       .input("Celular", sql.VarChar(10), data.Celular || null)
       .input("Estatus", sql.VarChar(15), data.Estatus || "Activo")
@@ -18,10 +17,10 @@ class Liga {
       .input("updated_at", sql.DateTime, now)
       .query(`
         INSERT INTO Ligas
-        (Nombre, Logo, Categorias, Direccion, Celular, Estatus, created_at, updated_at)
+        (Nombre, Logo, Direccion, Celular, Estatus, created_at, updated_at)
         OUTPUT INSERTED.*
         VALUES
-        (@Nombre, @Logo, @Categorias, @Direccion, @Celular, @Estatus, @created_at, @updated_at)
+        (@Nombre, @Logo, @Direccion, @Celular, @Estatus, @created_at, @updated_at)
       `);
 
     return result.recordset[0];
