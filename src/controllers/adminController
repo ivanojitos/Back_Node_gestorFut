@@ -1,4 +1,5 @@
 const Admin = require("../models/administradorModel");
+const bcrypt = require("bcrypt");
 
 // 🔥 OBTENER TODOS
 exports.getAdmins = async (req, res) => {
@@ -34,6 +35,14 @@ exports.createAdmin = async (req, res) => {
       });
     }
 
+    // 🔐 HASH PASSWORD
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(data.Password, saltRounds);
+
+    // reemplazar password original
+    data.Password = hashedPassword;
+
+    // 🚀 CREAR ADMIN
     const nuevoAdmin = await Admin.create(data);
 
     res.status(201).json({
