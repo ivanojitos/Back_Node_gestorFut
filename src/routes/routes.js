@@ -27,6 +27,6 @@ router.get('/ligas', ligasController.getLigas);
 // ✅ OBTENER UNA
 router.get('/ligas/:id', ligasController.getLigaById);
 
-router.post("/ligas", upload.single("Logo"), ligaController.createLiga);
+router.post("/ligas", upload.single("Logo"), ligasController.createLiga);
 
 module.exports = router;
