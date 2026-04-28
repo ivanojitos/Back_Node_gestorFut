@@ -6,6 +6,7 @@ const path = require("path");
 
 exports.createLiga = async (req, res) => {
   try {
+    console.log("🔥 ENTRE A CREATE LIGA"); 
     const data = req.body;
 
     console.log("BODY:", req.body);
