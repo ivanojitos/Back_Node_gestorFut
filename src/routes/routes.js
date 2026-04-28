@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const upload = require("../uploads/");
+const upload = require("../uploads/upload");
 
 const loginController = require('../controllers/loginController');
 const arbitroController = require('../controllers/arbitroController');
