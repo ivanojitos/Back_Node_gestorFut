@@ -40,13 +40,15 @@ exports.createAdmin = async (req, res) => {
 
     // 👇 mapear a tu DB
     const nuevoAdmin = await Admin.create({
+      Nombre: data.nombre,
+      Edad: data.edad,
+      Celular: data.celular,
+      Id_Ligas: data.id_ligas,
+      Estatus: data.estatus,
       Correo: data.correo,
       Password: hashedPassword,
-      Celular: data.celular || null,
-      Id_Ligas: data.id_liga || null,
-      Estatus: data.estatus || "Activo",
     });
-
+    
     res.status(201).json({
       ok: true,
       message: "Administrador creado correctamente",
