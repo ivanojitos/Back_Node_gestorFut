@@ -17,6 +17,7 @@ exports.createLiga = async (req, res) => {
       return res.status(400).json({
         ok: false,
         error: "El nombre es obligatorio dicen",
+        datos: data,
       });
     }
 
