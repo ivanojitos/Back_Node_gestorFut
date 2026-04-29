@@ -34,4 +34,10 @@ const adminController = require("../controllers/adminController");
 router.get("/admins", adminController.getAdmins);
 router.post("/admins", adminController.createAdmin);
 
+//CATEGORIAS
+router.post("/categorias", categoriaController.createCategoria);
+router.get("/categorias", categoriaController.getCategorias);
+
+
+
 module.exports = router;
