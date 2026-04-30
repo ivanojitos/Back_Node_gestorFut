@@ -39,6 +39,10 @@ router.post("/admins", adminController.createAdmin);
 router.post("/categorias", categoriaController.createCategoria);
 router.get("/categorias", categoriaController.getCategorias);
 
+//EQUIPOS
+router.post("/equipos", equipoController.createEquipo);
+router.get("/equipos/jugador/:id", equipoController.getEquipoByJugador);
+
 
 
 module.exports = router;
