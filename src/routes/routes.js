@@ -7,6 +7,7 @@ const arbitroController = require("../controllers/arbitroController");
 const ligasController = require("../controllers/ligasController");
 const categoriaController = require("../controllers/categoriaController");
 const equipoController = require("../controllers/equipoController");
+const jugadorController = require("../controllers/jugadorController");
 // LOGIN
 router.post("/login", loginController.login);
 
@@ -21,7 +22,7 @@ router.put("/arbitro/:id", arbitroController.updateArbitro);
 
 // ✅ CREAR LIGA
 
-// ✅ OBTENER TODAS
+// ✅ OBTENER TODAS     
 router.get("/ligas", ligasController.getLigas);
 
 // ✅ OBTENER UNA
@@ -42,6 +43,9 @@ router.get("/categorias", categoriaController.getCategorias);
 //EQUIPOS
 router.post("/equipos", equipoController.createEquipo);
 router.get("/equipos/jugador/:id", equipoController.getEquipoByJugador);
+
+//JUGADORES
+const jugadorController = require("../controllers/jugadorController");
 
 
 
