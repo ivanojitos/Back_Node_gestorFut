@@ -6,7 +6,7 @@ const loginController = require("../controllers/loginController");
 const arbitroController = require("../controllers/arbitroController");
 const ligasController = require("../controllers/ligasController");
 const categoriaController = require("../controllers/categoriaController");
-
+const equipoController = require("../controllers/equipoController");
 // LOGIN
 router.post("/login", loginController.login);
 
