@@ -44,8 +44,9 @@ router.get("/categorias", categoriaController.getCategorias);
 router.post("/equipos", equipoController.createEquipo);
 router.get("/equipos/jugador/:id", equipoController.getEquipoByJugador);
 
-//JUGADORES
-const jugadorController = require("../controllers/jugadorController");
+// JUGADORES
+router.get("/jugadores/:id", jugadorController.getJugadorById);
+router.get("/jugador/:id", jugadorController.getJugadorById); // 👈 agrega esta
 
 
 

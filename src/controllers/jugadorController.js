@@ -1,25 +1,36 @@
-const db = require("../db"); // o tu conexión
+const Jugador = require("../models/jugadorModel");
 
 exports.getJugadorById = async (req, res) => {
-  const { id } = req.params;
-
   try {
-    const [rows] = await db.query(
-      "SELECT * FROM jugadores WHERE Id = ?",
-      [id]
-    );
+    const { id } = req.params;
 
-    if (rows.length === 0) {
-      return res.status(404).json({ ok: false, message: "Jugador no encontrado" });
+    if (!id) {
+      return res.status(400).json({
+        ok: false,
+        message: "ID requerido",
+      });
+    }
+
+    const jugador = await Jugador.findById(id);
+
+    if (!jugador) {
+      return res.status(404).json({
+        ok: false,
+        message: "Jugador no encontrado",
+      });
     }
 
     res.json({
       ok: true,
-      data: rows[0],
+      data: jugador,
     });
 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ ok: false, message: "Error servidor" });
+    console.error("Error getJugadorById:", error);
+
+    res.status(500).json({
+      ok: false,
+      message: "Error del servidor",
+    });
   }
 };
