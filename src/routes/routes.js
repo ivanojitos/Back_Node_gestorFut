@@ -2,58 +2,75 @@ const express = require("express");
 const router = express.Router();
 const upload = require("../uploads/upload");
 
+// CONTROLLERS
 const loginController = require("../controllers/loginController");
 const arbitroController = require("../controllers/arbitroController");
 const ligasController = require("../controllers/ligasController");
 const categoriaController = require("../controllers/categoriaController");
 const equipoController = require("../controllers/equipoController");
 const jugadorController = require("../controllers/jugadorController");
-// LOGIN
-router.post("/login", loginController.login);
-
-// CREAR
-router.post("/createJugador", loginController.crearJugador);
-router.post("/createArbitro", loginController.crearArbitro);
-
-router.get("/arbitro/:id", arbitroController.getArbitro);
-
-// UPDATE
-router.put("/arbitro/:id", arbitroController.updateArbitro);
-
-// ✅ CREAR LIGA
-
-// ✅ OBTENER TODAS     
-router.get("/ligas", ligasController.getLigas);
-
-// ✅ OBTENER UNA
-router.get("/ligas/:id", ligasController.getLigaById);
-
-router.post("/ligas", upload.single("Logo"), ligasController.createLiga);
-
+const solicitudController = require("../controllers/solicitudController");
 const adminController = require("../controllers/adminController");
 
-// 🔥 ADMINS
-router.get("/admins", adminController.getAdmins);
-router.post("/admins", adminController.createAdmin);
 
-//CATEGORIAS
-router.post("/categorias", categoriaController.createCategoria);
-router.get("/categorias", categoriaController.getCategorias);
+// =======================
+// AUTH
+// =======================
+router.post("/login", loginController.login);
 
-//EQUIPOS
-router.post("/equipos", equipoController.createEquipo);
-router.get("/equipos/jugador/:id", equipoController.getEquipoByJugador);
 
+// =======================
 // JUGADORES
+// =======================
+router.post("/createJugador", loginController.crearJugador);
 router.get("/jugadores/:id", jugadorController.getJugadorById);
-router.get("/jugador/:id", jugadorController.getJugadorById); // 👈 agrega esta
 router.put("/jugadores/:id", jugadorController.updateJugador);
 router.put("/jugadores/:id/salir-equipo", jugadorController.salirEquipo);
 
-//EQUIPO DETALLE
-router.get("/equipos/jugador/:id", equipoController.getEquipoByJugador);
-router.get("/equipos/:id/jugadores", equipoController.getJugadoresByEquipo);
 
+// =======================
+// ÁRBITROS
+// =======================
+router.post("/createArbitro", loginController.crearArbitro);
+router.get("/arbitro/:id", arbitroController.getArbitro);
+router.put("/arbitro/:id", arbitroController.updateArbitro);
+
+
+// =======================
+// LIGAS
+// =======================
+router.get("/ligas", ligasController.getLigas);
+router.get("/ligas/:id", ligasController.getLigaById);
+router.post("/ligas", upload.single("Logo"), ligasController.createLiga);
+
+
+// =======================
+// CATEGORÍAS
+// =======================
+router.post("/categorias", categoriaController.createCategoria);
+router.get("/categorias", categoriaController.getCategorias);
+
+
+// =======================
+// EQUIPOS
+// =======================
+router.post("/equipos", equipoController.createEquipo);
+router.get("/equipos", equipoController.getEquipos);
+router.get("/equipos/:id/jugadores", equipoController.getJugadoresByEquipo);
+router.get("/equipos/jugador/:id", equipoController.getEquipoByJugador);
+
+
+// =======================
+// ADMIN
+// =======================
+router.get("/admins", adminController.getAdmins);
+router.post("/admins", adminController.createAdmin);
+
+
+// =======================
+// SOLICITUDES
+// =======================
+router.post("/solicitudes", solicitudController.createSolicitud);
 
 
 module.exports = router;

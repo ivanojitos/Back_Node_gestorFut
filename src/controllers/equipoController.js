@@ -102,3 +102,27 @@ exports.getJugadoresByEquipo = async (req, res) => {
     });
   }
 };
+
+exports.getEquipos = async (req, res) => {
+  try {
+    const { Id_Liga, Id_Categoria } = req.query;
+
+    const equipos = await Equipo.getEquipos({
+      Id_Liga,
+      Id_Categoria,
+    });
+
+    res.json({
+      ok: true,
+      data: equipos,
+    });
+
+  } catch (error) {
+    console.error("ERROR getEquipos:", error);
+
+    res.status(500).json({
+      ok: false,
+      message: "Error al obtener equipos",
+    });
+  }
+};

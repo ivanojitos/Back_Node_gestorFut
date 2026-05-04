@@ -26,12 +26,10 @@ class Equipo {
   }
 
   // 🔥 OBTENER EQUIPO POR JUGADOR
-static async getByJugador(id) {
-  const pool = await getPool();
+  static async getByJugador(id) {
+    const pool = await getPool();
 
-  const result = await pool.request()
-    .input("Id", sql.Int, id)
-    .query(`
+    const result = await pool.request().input("Id", sql.Int, id).query(`
       SELECT e.*, l.Nombre AS Liga, c.Nombre AS Categoria
       FROM Jugadores j
       INNER JOIN Equipos e ON j.Id_Equipo = e.Id
@@ -40,8 +38,8 @@ static async getByJugador(id) {
       WHERE j.Id = @Id
     `);
 
-  return result.recordset;
-}
+    return result.recordset;
+  }
 
   // 🔥 OBTENER JUGADORES DEL EQUIPO
   static async getJugadoresByEquipo(idEquipo) {
@@ -58,6 +56,38 @@ static async getByJugador(id) {
         FROM Jugadores
         WHERE Id_Equipo = @Id_Equipo
       `);
+
+    return result.recordset;
+  }
+
+  static async getEquipos(filters) {
+    const pool = await getPool();
+
+    let query = `
+    SELECT 
+      e.*, 
+      l.Nombre AS Liga, 
+      c.Nombre AS Categoria,
+      (SELECT COUNT(*) FROM Jugadores j WHERE j.Id_Equipo = e.Id) AS TotalJugadores
+    FROM Equipos e
+    LEFT JOIN Ligas l ON e.Id_Liga = l.Id
+    LEFT JOIN Categorias c ON e.Id_Categoria = c.Id
+    WHERE 1=1
+  `;
+
+    const request = pool.request();
+
+    if (filters.Id_Liga) {
+      query += " AND e.Id_Liga = @Id_Liga";
+      request.input("Id_Liga", sql.Int, filters.Id_Liga);
+    }
+
+    if (filters.Id_Categoria) {
+      query += " AND e.Id_Categoria = @Id_Categoria";
+      request.input("Id_Categoria", sql.Int, filters.Id_Categoria);
+    }
+
+    const result = await request.query(query);
 
     return result.recordset;
   }
