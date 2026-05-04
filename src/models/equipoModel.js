@@ -1,19 +1,18 @@
 const { sql, getPool } = require("../config/db");
 
 class Equipo {
-
   // 🔥 CREAR EQUIPO
   static async create(data) {
     const pool = await getPool();
 
-    const result = await pool.request()
+    const result = await pool
+      .request()
       .input("Nombre", sql.VarChar, data.Nombre)
       .input("Id_Liga", sql.Int, data.Id_Liga)
       .input("Id_Categoria", sql.Int, data.Id_Categoria)
       .input("Id_Jugador", sql.Int, data.Id_Jugador)
       .input("Estatus", sql.NVarChar, "activo")
-      .input("Logo", sql.VarChar, data.Logo || "")
-      .query(`
+      .input("Logo", sql.VarChar, data.Logo || "").query(`
         INSERT INTO Equipos
         (Nombre, Id_Liga, Id_Categoria, Id_Jugador, Estatus, Logo,
          PJ, PG, PE, PP, GF, GC, Diferencia, PTS)
@@ -30,12 +29,12 @@ class Equipo {
   static async getByJugador(id) {
     const pool = await getPool();
 
-    const result = await pool.request()
-      .input("Id", sql.Int, id)
-      .query(`
-        SELECT * 
-        FROM Equipos 
-        WHERE Id_Jugador = @Id
+    const result = await pool.request().input("Id", sql.Int, id).query(`
+       SELECT e.*, l.Nombre AS Liga, c.Nombre AS Categoria
+       FROM Equipos e
+       LEFT JOIN Ligas l ON e.Id_Liga = l.Id
+       LEFT JOIN Categorias c ON e.Id_Categoria = c.Id
+       WHERE e.Id_Jugador = @Id
       `);
 
     return result.recordset;
@@ -45,8 +44,7 @@ class Equipo {
   static async getJugadoresByEquipo(idEquipo) {
     const pool = await getPool();
 
-    const result = await pool.request()
-      .input("Id_Equipo", sql.Int, idEquipo)
+    const result = await pool.request().input("Id_Equipo", sql.Int, idEquipo)
       .query(`
         SELECT 
           Id,
@@ -60,7 +58,6 @@ class Equipo {
 
     return result.recordset;
   }
-
 }
 
 module.exports = Equipo;
