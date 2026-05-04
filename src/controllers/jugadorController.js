@@ -44,9 +44,22 @@ exports.updateJugador = async (req, res) => {
       return res.status(404).json({ msg: "Jugador no existe" });
     }
 
-    const actualizado = await Jugador.update(id, req.body);
+    // 🔥 si viene archivo, usarlo
+    const foto = req.file
+      ? `/imagenes/jugadores/${req.file.filename}`
+      : req.body.Foto;
 
-    res.json(actualizado);
+    const data = {
+      ...req.body,
+      Foto: foto,
+    };
+
+    const actualizado = await Jugador.update(id, data);
+
+    res.json({
+      ok: true,
+      data: actualizado,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error actualizando jugador" });
