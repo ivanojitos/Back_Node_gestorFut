@@ -48,6 +48,7 @@ router.get("/equipos/jugador/:id", equipoController.getEquipoByJugador);
 router.get("/jugadores/:id", jugadorController.getJugadorById);
 router.get("/jugador/:id", jugadorController.getJugadorById); // 👈 agrega esta
 router.put("/jugadores/:id", jugadorController.updateJugador);
+router.put("/jugadores/:id/salir-equipo", jugadorController.salirEquipo);
 
 //EQUIPO DETALLE
 router.get("/equipos/jugador/:id", equipoController.getEquipoByJugador);

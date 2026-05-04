@@ -24,7 +24,6 @@ exports.getJugadorById = async (req, res) => {
       ok: true,
       data: jugador,
     });
-
   } catch (error) {
     console.error("Error getJugadorById:", error);
 
@@ -48,9 +47,36 @@ exports.updateJugador = async (req, res) => {
     const actualizado = await Jugador.update(id, req.body);
 
     res.json(actualizado);
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error actualizando jugador" });
+  }
+};
+
+exports.salirEquipo = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const jugador = await Jugador.findById(id);
+
+    if (!jugador) {
+      return res.status(404).json({
+        ok: false,
+        message: "Jugador no encontrado",
+      });
+    }
+
+    await Jugador.salirEquipo(id);
+
+    res.json({
+      ok: true,
+      message: "Jugador salió del equipo",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      ok: false,
+      message: "Error al salir del equipo",
+    });
   }
 };

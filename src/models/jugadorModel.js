@@ -81,6 +81,22 @@ class Jugador {
 
     return result.recordset[0];
   }
+
+  static async salirEquipo(id) {
+  const pool = await getPool();
+
+  const result = await pool.request()
+    .input("Id", sql.Int, id)
+    .query(`
+      UPDATE Jugadores
+      SET Id_Equipo = NULL
+      OUTPUT INSERTED.*
+      WHERE Id = @Id
+    `);
+
+  return result.recordset[0];
+}
+
 }
 
 module.exports = Jugador;
