@@ -48,6 +48,10 @@ router.get("/equipos/jugador/:id", equipoController.getEquipoByJugador);
 router.get("/jugadores/:id", jugadorController.getJugadorById);
 router.get("/jugador/:id", jugadorController.getJugadorById); // 👈 agrega esta
 
+//EQUIPO DETALLE
+router.get("/equipos/jugador/:id", equipoController.getEquipoByJugador);
+router.get("/equipos/:id/jugadores", equipoController.getJugadoresByEquipo);
+
 
 
 module.exports = router;
