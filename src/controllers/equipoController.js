@@ -13,7 +13,6 @@ exports.createEquipo = async (req, res) => {
       });
     }
 
-    // 🔥 VALIDAR SI YA TIENE EQUIPO
     const existing = await Equipo.getByJugador(Id_Jugador);
 
     if (existing.length > 0) {
@@ -23,10 +22,14 @@ exports.createEquipo = async (req, res) => {
       });
     }
 
-    // 🔥 CREAR EQUIPO
-    const equipo = await Equipo.create(req.body);
+    // 🔥 AQUÍ ESTÁ LA CLAVE
+    const logo = req.file ? req.file.filename : req.body.Logo;
 
-    // 🔥 ASIGNAR EQUIPO AL JUGADOR (CLAVE 🔥)
+    const equipo = await Equipo.create({
+      ...req.body,
+      Logo: logo,
+    });
+
     const pool = await getPool();
 
     await pool.request()

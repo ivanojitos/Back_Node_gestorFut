@@ -52,6 +52,7 @@ router.post("/equipos", equipoController.createEquipo);
 router.get("/equipos", equipoController.getEquipos);
 router.get("/equipos/:id/jugadores", equipoController.getJugadoresByEquipo);
 router.get("/equipos/jugador/:id", equipoController.getEquipoByJugador);
+router.post("/equipos", upload.single("Logo"), equipoController.createEquipo);
 
 // =======================
 // ADMIN

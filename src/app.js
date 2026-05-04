@@ -13,5 +13,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api', require('./routes/routes'));
 
 app.use("/imagenes", express.static("imagenes"));
+app.use("/uploads", express.static("uploads"));
 
 module.exports = app;
