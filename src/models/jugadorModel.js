@@ -1,13 +1,12 @@
 const { sql, getPool } = require("../config/db");
 
 class Jugador {
-
   static async findByCorreo(correo) {
     const pool = await getPool();
 
-    const result = await pool.request()
-      .input("Correo", sql.VarChar, correo.trim())
-      .query(`
+    const result = await pool
+      .request()
+      .input("Correo", sql.VarChar, correo.trim()).query(`
         SELECT TOP 1 * 
         FROM Jugadores 
         WHERE LTRIM(RTRIM(Correo)) = @Correo
@@ -19,9 +18,7 @@ class Jugador {
   static async findById(id) {
     const pool = await getPool();
 
-    const result = await pool.request()
-      .input("Id", sql.Int, id)
-      .query(`
+    const result = await pool.request().input("Id", sql.Int, id).query(`
         SELECT * 
         FROM Jugadores 
         WHERE Id = @Id
@@ -33,7 +30,8 @@ class Jugador {
   static async create(data) {
     const pool = await getPool();
 
-    const result = await pool.request()
+    const result = await pool
+      .request()
       .input("NombreCompleto", sql.VarChar, data.NombreCompleto)
       .input("Edad", sql.Int, data.Edad)
       .input("Numero", sql.Int, data.Numero)
@@ -45,8 +43,7 @@ class Jugador {
       .input("Password", sql.VarChar, data.Password)
       .input("Estatus", sql.VarChar, "Activo")
       .input("Id_Equipo", sql.Int, 1)
-      .input("NumCampeonatos", sql.Int, 0)
-      .query(`
+      .input("NumCampeonatos", sql.Int, 0).query(`
         INSERT INTO Jugadores
         (NombreCompleto, Edad, Numero, Posicion, Id_Liga, Correo,
          Estatura, Foto, Password, Estatus, Id_Equipo, NumCampeonatos)
@@ -55,6 +52,32 @@ class Jugador {
         (@NombreCompleto, @Edad, @Numero, @Posicion, @Id_Liga, @Correo,
          @Estatura, @Foto, @Password, @Estatus, @Id_Equipo, @NumCampeonatos)
       `);
+
+    return result.recordset[0];
+  }
+
+  static async update(id, data) {
+    const pool = await getPool();
+
+    const result = await pool
+      .request()
+      .input("Id", sql.Int, id)
+      .input("NombreCompleto", sql.VarChar, data.NombreCompleto)
+      .input("Edad", sql.Int, data.Edad)
+      .input("Numero", sql.Int, data.Numero)
+      .input("Posicion", sql.VarChar, data.Posicion)
+      .input("Foto", sql.VarChar, data.Foto).query(`
+      UPDATE Jugadores
+      SET 
+        NombreCompleto = @NombreCompleto,
+        Edad = @Edad,
+        Numero = @Numero,
+        Posicion = @Posicion,
+        Foto = @Foto
+      WHERE Id = @Id;
+
+      SELECT * FROM Jugadores WHERE Id = @Id;
+    `);
 
     return result.recordset[0];
   }

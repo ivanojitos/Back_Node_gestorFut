@@ -34,3 +34,23 @@ exports.getJugadorById = async (req, res) => {
     });
   }
 };
+
+exports.updateJugador = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const jugador = await Jugador.findById(id);
+
+    if (!jugador) {
+      return res.status(404).json({ msg: "Jugador no existe" });
+    }
+
+    const actualizado = await Jugador.update(id, req.body);
+
+    res.json(actualizado);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error actualizando jugador" });
+  }
+};
