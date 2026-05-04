@@ -12,12 +12,10 @@ const jugadorController = require("../controllers/jugadorController");
 const solicitudController = require("../controllers/solicitudController");
 const adminController = require("../controllers/adminController");
 
-
 // =======================
 // AUTH
 // =======================
 router.post("/login", loginController.login);
-
 
 // =======================
 // JUGADORES
@@ -27,14 +25,12 @@ router.get("/jugadores/:id", jugadorController.getJugadorById);
 router.put("/jugadores/:id", jugadorController.updateJugador);
 router.put("/jugadores/:id/salir-equipo", jugadorController.salirEquipo);
 
-
 // =======================
 // ÁRBITROS
 // =======================
 router.post("/createArbitro", loginController.crearArbitro);
 router.get("/arbitro/:id", arbitroController.getArbitro);
 router.put("/arbitro/:id", arbitroController.updateArbitro);
-
 
 // =======================
 // LIGAS
@@ -43,13 +39,11 @@ router.get("/ligas", ligasController.getLigas);
 router.get("/ligas/:id", ligasController.getLigaById);
 router.post("/ligas", upload.single("Logo"), ligasController.createLiga);
 
-
 // =======================
 // CATEGORÍAS
 // =======================
 router.post("/categorias", categoriaController.createCategoria);
 router.get("/categorias", categoriaController.getCategorias);
-
 
 // =======================
 // EQUIPOS
@@ -59,18 +53,16 @@ router.get("/equipos", equipoController.getEquipos);
 router.get("/equipos/:id/jugadores", equipoController.getJugadoresByEquipo);
 router.get("/equipos/jugador/:id", equipoController.getEquipoByJugador);
 
-
 // =======================
 // ADMIN
 // =======================
 router.get("/admins", adminController.getAdmins);
 router.post("/admins", adminController.createAdmin);
 
-
 // =======================
 // SOLICITUDES
 // =======================
 router.post("/solicitudes", solicitudController.createSolicitud);
-
+router.get("/solicitudes/jugador/:id", solicitudController.getByJugador);
 
 module.exports = router;

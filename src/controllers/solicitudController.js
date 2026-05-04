@@ -20,7 +20,6 @@ exports.createSolicitud = async (req, res) => {
       ok: true,
       message: "Solicitud enviada",
     });
-
   } catch (error) {
     console.error("ERROR solicitud:", error);
 
@@ -28,5 +27,14 @@ exports.createSolicitud = async (req, res) => {
       ok: false,
       message: "Error al enviar solicitud",
     });
+  }
+};
+
+exports.getByJugador = async (req, res) => {
+  try {
+    const data = await Solicitud.getByJugador(req.params.id);
+    res.json({ ok: true, data });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
   }
 };
