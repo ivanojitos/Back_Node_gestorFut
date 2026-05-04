@@ -1,10 +1,12 @@
 const Equipo = require("../models/equipoModel");
 const { getPool, sql } = require("../config/db"); // 🔥 necesario para update
 
+const fs = require("fs");
+const path = require("path");
 // 🔥 CREAR EQUIPO
 exports.createEquipo = async (req, res) => {
   try {
-    const { Id_Jugador } = req.body;
+    const { Id_Jugador, Nombre } = req.body;
 
     if (!Id_Jugador) {
       return res.status(400).json({
@@ -13,6 +15,7 @@ exports.createEquipo = async (req, res) => {
       });
     }
 
+    // 🔥 validar duplicado
     const existing = await Equipo.getByJugador(Id_Jugador);
 
     if (existing.length > 0) {
@@ -22,20 +25,35 @@ exports.createEquipo = async (req, res) => {
       });
     }
 
-    // 🔥 AQUÍ ESTÁ LA CLAVE
-    const logo = req.file ? req.file.filename : req.body.Logo;
+    // 🔥 carpeta dinámica igual que ligas
+    const folderName = Nombre.replace(/\s+/g, "").toLowerCase();
+
+    const uploadPath = path.join(
+      __dirname,
+      "../../imagenes/equipos",
+      folderName,
+    );
+
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+
+    // 🔥 LOGO
+    const logoPath = req.file
+      ? `/imagenes/equipos/${folderName}/${req.file.filename}`
+      : null;
 
     const equipo = await Equipo.create({
       ...req.body,
-      Logo: logo,
+      Logo: logoPath,
     });
 
     const pool = await getPool();
 
-    await pool.request()
+    await pool
+      .request()
       .input("Id_Equipo", sql.Int, equipo.Id)
-      .input("Id_Jugador", sql.Int, Id_Jugador)
-      .query(`
+      .input("Id_Jugador", sql.Int, Id_Jugador).query(`
         UPDATE Jugadores
         SET Id_Equipo = @Id_Equipo
         WHERE Id = @Id_Jugador
@@ -45,16 +63,14 @@ exports.createEquipo = async (req, res) => {
       ok: true,
       data: equipo,
     });
-
   } catch (error) {
-    console.error("ERROR createEquipo:", error);
+    console.error(error);
     res.status(500).json({
       ok: false,
       message: "Error al crear equipo",
     });
   }
 };
-
 
 // 🔥 OBTENER EQUIPO POR JUGADOR
 exports.getEquipoByJugador = async (req, res) => {
@@ -67,7 +83,6 @@ exports.getEquipoByJugador = async (req, res) => {
       ok: true,
       data: equipo || [],
     });
-
   } catch (error) {
     console.error("ERROR getEquipoByJugador:", error);
     res.status(500).json({
@@ -76,7 +91,6 @@ exports.getEquipoByJugador = async (req, res) => {
     });
   }
 };
-
 
 // 🔥 OBTENER JUGADORES POR EQUIPO
 exports.getJugadoresByEquipo = async (req, res) => {
@@ -96,7 +110,6 @@ exports.getJugadoresByEquipo = async (req, res) => {
       ok: true,
       data: jugadores || [],
     });
-
   } catch (error) {
     console.error("ERROR getJugadoresByEquipo:", error);
     res.status(500).json({
@@ -119,7 +132,6 @@ exports.getEquipos = async (req, res) => {
       ok: true,
       data: equipos,
     });
-
   } catch (error) {
     console.error("ERROR getEquipos:", error);
 
