@@ -26,19 +26,22 @@ class Equipo {
   }
 
   // 🔥 OBTENER EQUIPO POR JUGADOR
-  static async getByJugador(id) {
-    const pool = await getPool();
+static async getByJugador(id) {
+  const pool = await getPool();
 
-    const result = await pool.request().input("Id", sql.Int, id).query(`
-       SELECT e.*, l.Nombre AS Liga, c.Nombre AS Categoria
-       FROM Equipos e
-       LEFT JOIN Ligas l ON e.Id_Liga = l.Id
-       LEFT JOIN Categorias c ON e.Id_Categoria = c.Id
-       WHERE e.Id_Jugador = @Id
-      `);
+  const result = await pool.request()
+    .input("Id", sql.Int, id)
+    .query(`
+      SELECT e.*, l.Nombre AS Liga, c.Nombre AS Categoria
+      FROM Jugadores j
+      INNER JOIN Equipos e ON j.Id_Equipo = e.Id
+      LEFT JOIN Ligas l ON e.Id_Liga = l.Id
+      LEFT JOIN Categorias c ON e.Id_Categoria = c.Id
+      WHERE j.Id = @Id
+    `);
 
-    return result.recordset;
-  }
+  return result.recordset;
+}
 
   // 🔥 OBTENER JUGADORES DEL EQUIPO
   static async getJugadoresByEquipo(idEquipo) {
