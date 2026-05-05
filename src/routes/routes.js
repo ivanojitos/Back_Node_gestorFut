@@ -22,9 +22,9 @@ router.post("/login", loginController.login);
 // =======================
 router.post("/createJugador", loginController.crearJugador);
 router.get("/jugadores/:id", jugadorController.getJugadorById);
-router.put("/jugadores/:id", jugadorController.updateJugador);
 router.put("/jugadores/:id/salir-equipo", jugadorController.salirEquipo);
 router.put("/jugadores/:id", upload.single("Foto"), jugadorController.updateJugador);
+
 
 // =======================
 // ÁRBITROS
