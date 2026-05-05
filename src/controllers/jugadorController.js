@@ -45,6 +45,7 @@ exports.updateJugador = async (req, res) => {
     }
 
     // 🔥 si viene archivo, usarlo
+    console.log("FILE:", req.file);
     const foto = req.file
       ? `/imagenes/jugadores/${req.file.filename}`
       : req.body.Foto;
