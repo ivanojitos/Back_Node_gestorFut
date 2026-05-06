@@ -91,6 +91,59 @@ class Equipo {
 
     return result.recordset;
   }
+
+  static async getTabla(Id_Liga, Id_Categoria) {
+    const pool = await getPool();
+
+    // 🔥 EQUIPOS ORDENADOS
+    const equipos = await pool
+      .request()
+      .input("Id_Liga", sql.Int, Id_Liga)
+      .input("Id_Categoria", sql.Int, Id_Categoria).query(`
+      SELECT 
+        e.Id,
+        e.Nombre,
+        e.Logo,
+        e.PG,
+        e.PP,
+        e.PTS
+      FROM Equipos e
+      WHERE e.Id_Liga = @Id_Liga
+        AND e.Id_Categoria = @Id_Categoria
+      ORDER BY e.PTS DESC
+    `);
+
+    // 🔥 MVP (ejemplo simple)
+    const mvp = await pool.request().query(`
+    SELECT TOP 1 
+      NombreCompleto, Foto
+    FROM Jugadores
+    ORDER BY NEWID() -- 🔥 puedes cambiar por stats reales
+  `);
+
+    // 🔥 GOLEADOR
+    const goleador = await pool.request().query(`
+    SELECT TOP 1 
+      NombreCompleto, Foto, Goles
+    FROM Jugadores
+    ORDER BY Goles DESC
+  `);
+
+    // 🔥 PORTERO
+    const portero = await pool.request().query(`
+    SELECT TOP 1 
+      NombreCompleto, Foto
+    FROM Jugadores
+    WHERE Posicion = 'POR'
+  `);
+
+    return {
+      teams: equipos.recordset,
+      mvp: mvp.recordset[0],
+      scorer: goleador.recordset[0],
+      keeper: portero.recordset[0],
+    };
+  }
 }
 
 module.exports = Equipo;

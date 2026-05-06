@@ -141,3 +141,31 @@ exports.getEquipos = async (req, res) => {
     });
   }
 };
+
+//PARA MI TABLA DE EQUIPOS
+
+exports.getTabla = async (req, res) => {
+  try {
+    const { Id_Liga, Id_Categoria } = req.query;
+
+    if (!Id_Liga || !Id_Categoria) {
+      return res.status(400).json({
+        ok: false,
+        message: "Faltan parámetros",
+      });
+    }
+
+    const tabla = await Equipo.getTabla(Id_Liga, Id_Categoria);
+
+    res.json({
+      ok: true,
+      data: tabla,
+    });
+  } catch (error) {
+    console.error("ERROR getTabla:", error);
+    res.status(500).json({
+      ok: false,
+      message: "Error servidor",
+    });
+  }
+};

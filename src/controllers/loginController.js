@@ -90,6 +90,9 @@ exports.login = async (req, res) => {
 exports.crearJugador = async (req, res) => {
   const data = req.body;
 
+  console.log("BODY:", data);
+  console.log("FILE:", req.file);
+
   const required = ["nombre", "numero", "edad", "correo", "liga", "password"];
 
   for (let f of required) {
@@ -104,6 +107,11 @@ exports.crearJugador = async (req, res) => {
   try {
     const hashed = await bcrypt.hash(data.password, 10);
 
+    // 🔥 GUARDAR RUTA DE LA FOTO
+    const fotoPath = req.file
+      ? `/imagenes/jugadores/${req.file.filename}`
+      : null;
+
     const jugador = await Jugador.create({
       NombreCompleto: data.nombre,
       Edad: data.edad,
@@ -112,13 +120,13 @@ exports.crearJugador = async (req, res) => {
       Id_Liga: data.liga,
       Correo: data.correo,
       Estatura: data.estatura || null,
-      Foto: null,
+      Foto: fotoPath, // 🔥 AQUÍ ESTABA EL ERROR
       Password: hashed,
     });
 
     return res.json({
       ok: true,
-      message: "Usuario creado correctamente,aprobado mi niño",
+      message: "Usuario creado correctamente",
       data: jugador,
     });
   } catch (err) {

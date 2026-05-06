@@ -42,7 +42,7 @@ class Jugador {
       .input("Foto", sql.VarChar, data.Foto)
       .input("Password", sql.VarChar, data.Password)
       .input("Estatus", sql.VarChar, "Activo")
-      .input("Id_Equipo", sql.Int, 1)
+      .input("Id_Equipo", sql.Int, 0)
       .input("NumCampeonatos", sql.Int, 0).query(`
         INSERT INTO Jugadores
         (NombreCompleto, Edad, Numero, Posicion, Id_Liga, Correo,

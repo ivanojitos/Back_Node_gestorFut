@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const upload = require("../uploads/upload");
+const uploadEquipo = require("../uploads/uploadEquipo");
 
 // CONTROLLERS
 const loginController = require("../controllers/loginController");
@@ -20,11 +21,18 @@ router.post("/login", loginController.login);
 // =======================
 // JUGADORES
 // =======================
-router.post("/createJugador", loginController.crearJugador);
+router.post(
+  "/createJugador",
+  upload.single("Foto"), // 🔥 FALTA ESTO
+  loginController.crearJugador,
+);
 router.get("/jugadores/:id", jugadorController.getJugadorById);
 router.put("/jugadores/:id/salir-equipo", jugadorController.salirEquipo);
-router.put("/jugadores/:id", upload.single("Foto"), jugadorController.updateJugador);
-
+router.put(
+  "/jugadores/:id",
+  upload.single("Foto"),
+  jugadorController.updateJugador,
+);
 
 // =======================
 // ÁRBITROS
@@ -49,12 +57,12 @@ router.get("/categorias", categoriaController.getCategorias);
 // =======================
 // EQUIPOS
 // =======================
-router.post("/equipos", equipoController.createEquipo);
+
 router.get("/equipos", equipoController.getEquipos);
 router.get("/equipos/:id/jugadores", equipoController.getJugadoresByEquipo);
 router.get("/equipos/jugador/:id", equipoController.getEquipoByJugador);
-router.post("/equipos", upload.single("Logo"), equipoController.createEquipo);
-
+router.post("/equipos", uploadEquipo.single("Logo"), equipoController.createEquipo);
+router.get("/tabla", equipoController.getTabla);
 // =======================
 // ADMIN
 // =======================
@@ -66,5 +74,16 @@ router.post("/admins", adminController.createAdmin);
 // =======================
 router.post("/solicitudes", solicitudController.createSolicitud);
 router.get("/solicitudes/jugador/:id", solicitudController.getByJugador);
+
+// 👑 NUEVO: dueño del equipo ve solicitudes
+router.get("/solicitudes/equipo/:id", solicitudController.getByEquipo);
+
+// ✅ aceptar jugador
+router.put("/solicitudes/aceptar/:id", solicitudController.accept);
+
+// ❌ rechazar jugador
+router.put("/solicitudes/rechazar/:id", solicitudController.reject);
+
+
 
 module.exports = router;
