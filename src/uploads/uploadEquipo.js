@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
 
     const uploadPath = path.join(
       __dirname,
-      "../../imagenes/equipos",
+      "../imagenes/equipos",
       folderName
     );
 

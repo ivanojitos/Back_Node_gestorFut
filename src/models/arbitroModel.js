@@ -79,6 +79,21 @@ class Arbitro {
 
     return result.recordset[0];
   }
+
+  // OBTENER TODOS LOS ÁRBITROS
+  static async getAllArbitros() {
+    const pool = await getPool();
+
+    const result = await pool.request().query(`
+      SELECT
+        Id,
+        Nombre
+      FROM Arbitros
+      ORDER BY Nombre ASC
+    `);
+
+    return result.recordset;
+  }
 }
 
 module.exports = Arbitro;

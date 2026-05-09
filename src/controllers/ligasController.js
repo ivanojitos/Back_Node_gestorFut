@@ -25,7 +25,7 @@ exports.createLiga = async (req, res) => {
     const folderName = nombre.replace(/\s+/g, "").toLowerCase();
 
     // ✅ CREAR CARPETA DINÁMICA
-    const uploadPath = path.join(__dirname, "../../imagenes", folderName);
+    const uploadPath = path.join(__dirname, "../imagenes", folderName);
 
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath, { recursive: true });

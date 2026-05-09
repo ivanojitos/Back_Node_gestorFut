@@ -30,7 +30,7 @@ exports.createEquipo = async (req, res) => {
 
     const uploadPath = path.join(
       __dirname,
-      "../../imagenes/equipos",
+      "../imagenes/equipos",
       folderName,
     );
 

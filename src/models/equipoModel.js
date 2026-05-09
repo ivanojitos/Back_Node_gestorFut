@@ -52,7 +52,8 @@ class Equipo {
           NombreCompleto,
           Numero,
           Posicion,
-          Foto
+          Foto,
+          Goles
         FROM Jugadores
         WHERE Id_Equipo = @Id_Equipo
       `);

@@ -44,3 +44,22 @@ exports.getArbitro = async (req, res) => {
     res.status(500).json({ error: "Error servidor" });
   }
 };
+
+// OBTENER TODOS LOS ÁRBITROS
+exports.getArbitros = async (req, res) => {
+  try {
+    const data = await Arbitro.getAllArbitros();
+
+    res.json({
+      ok: true,
+      data,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      ok: false,
+      message: "Error obteniendo árbitros",
+    });
+  }
+};

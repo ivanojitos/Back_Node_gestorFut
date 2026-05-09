@@ -12,6 +12,7 @@ const equipoController = require("../controllers/equipoController");
 const jugadorController = require("../controllers/jugadorController");
 const solicitudController = require("../controllers/solicitudController");
 const adminController = require("../controllers/adminController");
+const partidosController = require("../controllers/partidosController");
 
 // =======================
 // AUTH
@@ -40,6 +41,8 @@ router.put(
 router.post("/createArbitro", loginController.crearArbitro);
 router.get("/arbitro/:id", arbitroController.getArbitro);
 router.put("/arbitro/:id", arbitroController.updateArbitro);
+// NUEVO
+router.get("/arbitros", arbitroController.getArbitros);
 
 // =======================
 // LIGAS
@@ -54,6 +57,7 @@ router.post("/ligas", upload.single("Logo"), ligasController.createLiga);
 router.post("/categorias", categoriaController.createCategoria);
 router.get("/categorias", categoriaController.getCategorias);
 
+
 // =======================
 // EQUIPOS
 // =======================
@@ -61,7 +65,11 @@ router.get("/categorias", categoriaController.getCategorias);
 router.get("/equipos", equipoController.getEquipos);
 router.get("/equipos/:id/jugadores", equipoController.getJugadoresByEquipo);
 router.get("/equipos/jugador/:id", equipoController.getEquipoByJugador);
-router.post("/equipos", uploadEquipo.single("Logo"), equipoController.createEquipo);
+router.post(
+  "/equipos",
+  uploadEquipo.single("Logo"),
+  equipoController.createEquipo,
+);
 router.get("/tabla", equipoController.getTabla);
 // =======================
 // ADMIN
@@ -84,6 +92,37 @@ router.put("/solicitudes/aceptar/:id", solicitudController.accept);
 // ❌ rechazar jugador
 router.put("/solicitudes/rechazar/:id", solicitudController.reject);
 
+// =======================
+// MIS PARTIDOS
+// =======================
 
+// 🔥 obtener próximos + historial
+router.get("/mis-partidos/:idEquipo", partidosController.obtenerMisPartidos);
+
+// =======================
+// ADMINISTRADOR
+// =======================
+
+//PROGRAMAR PARTIDOS
+router.post("/partidos", partidosController.crearPartido);
+router.get("/partidosFull", partidosController.getPartidos);
+router.get(
+  "/partidos/equipo/:idEquipo",
+  partidosController.getPartidosPorEquipo,
+);
+router.get(
+  "/partidos/arbitro/:idArbitro",
+  partidosController.getPartidosByArbitro,
+);
+
+// =======================
+// ARBITRO
+// =======================
+router.post("/partidos/finalizar", partidosController.finalizarPartido);
+
+router.get(
+  "/partidos-equipo/:idEquipo",
+  partidosController.obtenerPartidosEquipo,
+);
 
 module.exports = router;
