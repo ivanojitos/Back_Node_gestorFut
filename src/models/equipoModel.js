@@ -107,7 +107,10 @@ class Equipo {
         e.Logo,
         e.PG,
         e.PP,
-        e.PTS
+        e.PTS,
+        e.GF,
+        e.GC,
+        e.Diferencia
       FROM Equipos e
       WHERE e.Id_Liga = @Id_Liga
         AND e.Id_Categoria = @Id_Categoria
@@ -145,6 +148,22 @@ class Equipo {
       keeper: portero.recordset[0],
     };
   }
+
+  static async updatePosicion(id, posicion) {
+  const pool = await getPool();
+
+  const result = await pool
+    .request()
+    .input("Id", sql.Int, id)
+    .input("Posicion", sql.Int, posicion)
+    .query(`
+      UPDATE Equipos
+      SET Posicion = @Posicion
+      WHERE Id = @Id
+    `);
+
+  return result;
+}
 }
 
 module.exports = Equipo;

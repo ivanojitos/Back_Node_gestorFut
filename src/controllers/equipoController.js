@@ -169,3 +169,22 @@ exports.getTabla = async (req, res) => {
     });
   }
 };
+
+
+exports.actualizarPosicion = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { Posicion } = req.body;
+
+    await Equipo.updatePosicion(id, Posicion);
+
+    res.json({
+      ok: true,
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      error,
+    });
+  }
+};

@@ -71,6 +71,8 @@ router.post(
   equipoController.createEquipo,
 );
 router.get("/tabla", equipoController.getTabla);
+router.put("/equipos/:id/posicion", equipoController.actualizarPosicion);
+
 // =======================
 // ADMIN
 // =======================

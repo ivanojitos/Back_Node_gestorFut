@@ -251,6 +251,9 @@ SELECT
   rj.Goles_Local,
   rj.Goles_Visitante,
 
+  el.Posicion AS Posicion_Local,
+  ev.Posicion AS Posicion_Visitante,
+
   l.Nombre AS Liga,
   cat.Nombre AS Categoria,
 
@@ -296,6 +299,53 @@ ORDER BY rj.Fecha_Juego DESC
 🔥 PARTIDOS FINALIZADOS POR EL ARBITRO
 =========================================
 */
+
+/*
+=========================================
+🔥 RECALCULAR POSICIONES
+=========================================
+*/
+
+const recalcularPosiciones = async (transaction, idLiga, idCategoria) => {
+  // 🔥 OBTENER TABLA ORDENADA
+  const result = await transaction
+    .request()
+    .input("IdLiga", idLiga)
+    .input("IdCategoria", idCategoria).query(`
+      SELECT
+        Id,
+        PTS,
+        Diferencia,
+        GF,
+        PJ,
+        PP
+      FROM Equipos
+      WHERE
+        Id_Liga = @IdLiga
+        AND Id_Categoria = @IdCategoria
+
+      ORDER BY
+        ISNULL(PTS,0) DESC,
+        ISNULL(Diferencia,0) DESC,
+        ISNULL(GF,0) DESC,
+        ISNULL(PJ,0) ASC,
+        ISNULL(PP,0) ASC
+    `);
+
+  const equipos = result.recordset;
+
+  // 🔥 ACTUALIZAR POSICIÓN
+  for (let i = 0; i < equipos.length; i++) {
+    await transaction
+      .request()
+      .input("EquipoId", equipos[i].Id)
+      .input("Posicion", i + 1).query(`
+        UPDATE Equipos
+        SET Posicion = @Posicion
+        WHERE Id = @EquipoId
+      `);
+  }
+};
 
 const finalizarPartido = async (payload) => {
   const pool = await getPool();
@@ -432,6 +482,19 @@ const finalizarPartido = async (payload) => {
       .query(` UPDATE Rol_Juego SET Estado = 'Jugado',
         Goles_Local = @GolesLocal, Goles_Visitante = @GolesVisitante 
         WHERE Id = @IdPartido `);
+
+    // =====================================================
+    // 🔥 RECALCULAR TABLA
+    // =====================================================
+
+    console.log(payload.partido);
+
+    await recalcularPosiciones(
+      transaction,
+      payload.partido.idLiga,
+      payload.partido.idCategoria,
+    );
+
     // =====================================================
     // // COMMIT //
     // =====================================================
@@ -474,7 +537,7 @@ const getPartidosEquipoPaginado = async (idEquipo, page = 1, limit = 10) => {
     ORDER BY rj.Fecha_Juego DESC
   `);
 
-  console.log(result.recordset);
+
 
   return result.recordset;
 };
