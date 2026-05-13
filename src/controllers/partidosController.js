@@ -37,15 +37,14 @@ exports.crearPartido = async (req, res) => {
       Responsable_Partido,
     } = req.body;
 
-    console.log("REQ BODY:", req.body);
-
+    // VALIDACIÓN
     if (
-      !Id_Liga ||
-      !Id_Categoria ||
-      !Id_Equipo_local ||
-      !Id_Equipo_visitante ||
-      !Id_Arbitro ||
-      !Id_Cancha ||
+      Id_Liga == null ||
+      Id_Categoria == null ||
+      Id_Equipo_local == null ||
+      Id_Equipo_visitante == null ||
+      Id_Arbitro == null ||
+      Id_Cancha == null ||
       !Fecha_Juego ||
       !Hora_Juego ||
       !Responsable_Partido
@@ -69,15 +68,18 @@ exports.crearPartido = async (req, res) => {
       Responsable_Partido,
     });
 
-    res.json({
+    return res.status(201).json({
       ok: true,
+      message: "Partido creado correctamente",
       data: nuevo,
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
+    console.log("❌ ERROR CREANDO PARTIDO:", error);
+
+    return res.status(500).json({
       ok: false,
       message: "Error creando partido",
+      error: error.message,
     });
   }
 };
@@ -85,7 +87,6 @@ exports.crearPartido = async (req, res) => {
 exports.getPartidos = async (req, res) => {
   try {
     const data = await Partidos.getAllPartidos();
-    console.log(data);
 
     res.json({
       ok: true,
@@ -107,8 +108,6 @@ exports.getPartidosPorEquipo = async (req, res) => {
 
     const data = await Partidos.getAllPartidosByTeam(idEquipo, liga, categoria);
 
-    console.log(data);
-
     res.json({
       ok: true,
       data,
@@ -128,8 +127,6 @@ exports.getPartidosByArbitro = async (req, res) => {
     const { idArbitro } = req.params;
 
     const data = await Partidos.getPartidosByArbitro(idArbitro);
-
-    console.log(data);
 
     res.json({
       ok: true,
@@ -168,11 +165,10 @@ exports.obtenerPartidosEquipo = async (req, res) => {
     const partidos = await Partidos.getPartidosEquipoPaginado(
       idEquipo,
       page,
-      limit
+      limit,
     );
 
     console.log(partidos);
-    
 
     res.json({
       ok: true,
@@ -184,6 +180,40 @@ exports.obtenerPartidosEquipo = async (req, res) => {
     res.status(500).json({
       ok: false,
       msg: "Error servidor",
+    });
+  }
+};
+
+exports.existePartido = async (req, res) => {
+  try {
+    const { liga, categoria, fechaInicio, fechaFin } = req.query;
+
+    if (!liga || !categoria || !fechaInicio || !fechaFin) {
+      return res.status(400).json({
+        ok: false,
+        message: "Faltan parámetros",
+      });
+    }
+
+    const exists = await Partidos.existePartido({
+      liga,
+      categoria,
+      fechaInicio,
+      fechaFin,
+    });
+
+    console.log(exists);
+
+    res.json({
+      ok: true,
+      exists,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      ok: false,
+      message: "Error verificando partidos",
     });
   }
 };

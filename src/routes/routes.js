@@ -100,7 +100,7 @@ router.put("/solicitudes/rechazar/:id", solicitudController.reject);
 
 // 🔥 obtener próximos + historial
 router.get("/mis-partidos/:idEquipo", partidosController.obtenerMisPartidos);
-
+router.get("/partidos/existe", partidosController.existePartido);
 // =======================
 // ADMINISTRADOR
 // =======================

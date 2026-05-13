@@ -250,6 +250,7 @@ SELECT
   rj.Id_Equipo_visitante,
   rj.Goles_Local,
   rj.Goles_Visitante,
+  rj.Id_Cancha,
 
   el.Posicion AS Posicion_Local,
   ev.Posicion AS Posicion_Visitante,
@@ -537,9 +538,28 @@ const getPartidosEquipoPaginado = async (idEquipo, page = 1, limit = 10) => {
     ORDER BY rj.Fecha_Juego DESC
   `);
 
-
-
   return result.recordset;
+};
+
+const existePartido = async ({ liga, categoria, fechaInicio, fechaFin }) => {
+  const pool = await getPool();
+
+  const result = await pool
+    .request()
+    .input("Liga", Number(liga))
+    .input("Categoria", Number(categoria))
+    .input("FechaInicio", fechaInicio)
+    .input("FechaFin", fechaFin).query(`
+      SELECT TOP 1 Id
+      FROM Rol_Juego
+
+      WHERE
+        Id_Liga = @Liga
+        AND Id_Categoria = @Categoria
+        AND Fecha_Juego BETWEEN @FechaInicio AND @FechaFin
+    `);
+
+  return result.recordset.length > 0;
 };
 
 module.exports = {
@@ -551,4 +571,5 @@ module.exports = {
   getPartidosByArbitro,
   finalizarPartido, // 👈 AGREGA ESTE
   getPartidosEquipoPaginado,
+  existePartido, // 👈 agregar
 };
