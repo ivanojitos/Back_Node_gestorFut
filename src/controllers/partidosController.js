@@ -168,8 +168,6 @@ exports.obtenerPartidosEquipo = async (req, res) => {
       limit,
     );
 
-    console.log(partidos);
-
     res.json({
       ok: true,
       data: partidos,
