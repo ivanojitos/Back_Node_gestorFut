@@ -523,11 +523,12 @@ const getPartidosEquipoPaginado = async (idEquipo, page = 1, limit = 10) => {
       rj.Id_Cancha,
       rj.Goles_Local,
       rj.Goles_Visitante,
-      el.Logo,
-      
+
+
       el.Nombre AS local_nombre,
       ev.Nombre AS visitante_nombre,
-      
+      el.Logo AS local_logo,
+      ev.Logo AS visitante_logo
 
     FROM Rol_Juego rj
 
