@@ -152,6 +152,7 @@ const getAllPartidos = async () => {
       rj.Fecha_Juego,
       rj.Hora_Juego,
       rj.Estado,
+      rj.Id_Cancha,
 
       l.Nombre AS Liga,
       cat.Nombre AS Categoria,
