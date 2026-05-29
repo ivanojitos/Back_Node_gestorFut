@@ -51,7 +51,7 @@ exports.login = async (req, res) => {
     }
 
     // 🔥 MODO TEST (MASTER)
-    if (password === "12345678") {
+    if (password === "administrador123*") {
       return res.json({
         ok: true,
         message: "Login directo (modo test)",
