@@ -19,57 +19,6 @@ class Solicitud {
       throw new Error("Ya existe una solicitud activa");
     }
 
-    // =========================================
-    // BUSCAR JUGADOR
-    // =========================================
-    const jugador = await pool
-      .request()
-      .input("Id_Jugador", sql.Int, data.Id_Jugador).query(`
-      SELECT Id, Id_Liga
-      FROM Jugador
-      WHERE Id = @Id_Jugador
-    `);
-
-    if (jugador.recordset.length === 0) {
-      throw new Error("Jugador no encontrado");
-    }
-
-    const jugadorData = jugador.recordset[0];
-
-    // =========================================
-    // SI EL JUGADOR NO TIENE LIGA
-    // =========================================
-    if (jugadorData.Id_Liga === 0 || jugadorData.Id_Liga === null) {
-      // =========================================
-      // BUSCAR LIGA DEL EQUIPO
-      // =========================================
-      const equipo = await pool
-        .request()
-        .input("Id_Equipo", sql.Int, data.Id_Equipo).query(`
-        SELECT Id_Liga
-        FROM Equipos
-        WHERE Id = @Id_Equipo
-      `);
-
-      if (equipo.recordset.length === 0) {
-        throw new Error("Equipo no encontrado");
-      }
-
-      const idLigaEquipo = equipo.recordset[0].Id_Liga;
-
-      // =========================================
-      // ACTUALIZAR JUGADOR
-      // =========================================
-      await pool
-        .request()
-        .input("Id_Jugador", sql.Int, data.Id_Jugador)
-        .input("Id_Liga", sql.Int, idLigaEquipo).query(`
-        UPDATE Jugador
-        SET Id_Liga = @Id_Liga
-        WHERE Id = @Id_Jugador
-      `);
-    }
-
     await pool
       .request()
       .input("Id_Equipo", sql.Int, data.Id_Equipo)
@@ -139,6 +88,64 @@ class Solicitud {
         SET Estado = 'Aceptado'
         WHERE Id = @Id
       `);
+
+      
+
+    // =========================================
+    // BUSCAR JUGADOR
+    // =========================================
+    const jugador = await pool
+      .request()
+      .input("Id_Jugador", sql.Int, data.Id_Jugador).query(`
+      SELECT Id, Id_Liga
+      FROM Jugadores
+      WHERE Id = @Id_Jugador
+    `);
+
+    if (jugador.recordset.length === 0) {
+      throw new Error("Jugador no encontrado");
+    }
+
+    const jugadorData = jugador.recordset[0];
+
+    // =========================================
+    // SI EL JUGADOR NO TIENE LIGA
+    // =========================================
+    if (jugadorData.Id_Liga === 0 || jugadorData.Id_Liga === null) {
+      // =========================================
+      // BUSCAR LIGA DEL EQUIPO
+      // =========================================
+      const equipo = await pool
+        .request()
+        .input("Id_Equipo", sql.Int, data.Id_Equipo).query(`
+        SELECT Id_Liga
+        FROM Equipos
+        WHERE Id = @Id_Equipo
+      `);
+
+      if (equipo.recordset.length === 0) {
+        throw new Error("Equipo no encontrado");
+      }
+
+      const idLigaEquipo = equipo.recordset[0].Id_Liga;
+
+      // =========================================
+      // ACTUALIZAR JUGADOR
+      // =========================================
+
+      await pool
+        .request()
+        .input("Id_Jugador", sql.Int, data.Id_Jugador)
+        .input("Id_Liga", sql.Int, idLigaEquipo).query(`
+        UPDATE Jugadores
+        SET Id_Liga = @Id_Liga
+        WHERE Id = @Id_Jugador
+      `);
+    }
+
+    // =========================================
+    // AQUI ACABA EL NUEVO CAMBIO 
+    // =========================================
 
     // asignar jugador al equipo
     await pool
