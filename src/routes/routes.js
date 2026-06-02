@@ -26,8 +26,9 @@ router.post(
   "/createJugador",
   upload.single("Foto"), // 🔥 FALTA ESTO
   loginController.crearJugador,
-);
+); 
 router.get("/jugadores/:id", jugadorController.getJugadorById);
+router.get("/jugadores", jugadorController.getJugador);
 router.put("/jugadores/:id/salir-equipo", jugadorController.salirEquipo);
 router.put(
   "/jugadores/:id",

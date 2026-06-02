@@ -94,3 +94,29 @@ exports.salirEquipo = async (req, res) => {
     });
   }
 };
+
+exports.getJugador = async (req, res) => {
+  try {
+   
+    const jugadores = await Jugador.findAll();
+
+    if (!jugadores) {
+      return res.status(404).json({
+        ok: false,
+        message: "Jugadores no encontrados",
+      });
+    }
+
+    res.json({
+      ok: true,
+      data: jugadores,
+    });
+  } catch (error) {
+    console.error("Error getJugadores:", error);
+
+    res.status(500).json({
+      ok: false,
+      message: "Error del servidor",
+    });
+  }
+};
